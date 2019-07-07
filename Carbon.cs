@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Carbons{
     public class Carbon{
         int[] links = new int[4];
-        int Hidrogens;
+        int hidrogens;
         public Carbon(){
             for(int i = 0; i<4;  i++){
                 links[i] = -1;
@@ -20,9 +20,12 @@ namespace Carbons{
         public void SetHidrogens(){
             for(int i = 0; i < 4; i++){
                 if(links[i] == -1){
-                    Hidrogens++;
+                    hidrogens++;
                 }
             }
+        }
+        public int GetHidrogens(){
+            return hidrogens;
         }
     }
 }

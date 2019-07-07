@@ -8,19 +8,19 @@ namespace Carbons{
         SpriteBatch spriteBatch;
 
         //Objects.
-        private Chain chain = new Chain(5, new int[]{3,3,4,2,2,1});
+        private Chain chain = new Chain(5, new int[]{3,2,2,2,3,2});
 
-        public static SpriteFont Font0, Font1;
+        public static SpriteFont Font0, Font1, Font2;
         public Game1(){
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-			
         }
 
         protected override void Initialize(){
             Font0 = Content.Load<SpriteFont>("Font0");
 			Font1 = Content.Load<SpriteFont>("Font1");
+            Font2 = Content.Load<SpriteFont>("Font2");
             base.Initialize();
         }
 
