@@ -30,13 +30,6 @@ namespace Carbons{
             }
         }
         public void Draw(SpriteBatch sprBt){
-            sprBt.DrawString(Font1, ""+carbNum, new Vector2(0, 0), Color.White);
-            for(int m = 0; m < carbNum; m++){
-                sprBt.DrawString(Font1, ""+m+":", new Vector2(400, 32*m), Color.White);
-                for(int n = 0; n < 4; n++){
-                    sprBt.DrawString(Font1, ""+c[m].Links(n), new Vector2(64*n+500, 32*m), Color.White);
-                }
-            }
             int x = 0, y = 0;
             for(int i = 0; i < chainLen; i++){
                 DrawCarbon(sprBt, i, new Vector2(x, y));

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -8,7 +9,9 @@ namespace Carbons{
         SpriteBatch spriteBatch;
 
         //Objects.
-        private Chain chain = new Chain(5, new int[]{3,2,2,2,3,2});
+        static string g = "3,4-Di Metil-Heptano";
+//        private Chain chain = new Chain(5, new int[]{3,2,2,2,3,2});
+        private Chain chain = new Chain(Converts.Added(g).Item2, Converts.Added(g).Item1);
 
         public static SpriteFont Font0, Font1, Font2;
         public Game1(){
