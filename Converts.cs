@@ -4,21 +4,26 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Carbons{
-    public class Converts{
-        public static string Con(string c){
-            int i = c.IndexOf(",")-1;
-            int m = c.IndexOf("-", i);
-            int f = c.IndexOf("-" ,m+1);
-            int s = c.IndexOf(" ", i, f);
-            string h = "", a = c.Substring(s+1,f-s-1);
-            for(int x = 0; x < countComas(c.Substring(i,f-i))*2+2; x+=2){
-                if(h == ""){
-                    h = c.Substring(i,f-i).Substring(x,1)+"-"+a;
+    public class Converter{
+        public static string ToExtended(string chain){
+            //Search stuff like "2,2 Di Metil" and converts it to something like "2-Metil-2-Metil".
+            int start = chain.IndexOf(",")-1;
+            int dividor = chain.IndexOf("-", start);
+            int end = chain.IndexOf("-" ,dividor + 1);
+            int length = end - start;
+            //Where the branch first character is.
+            int branch = chain.IndexOf(" ", start, length);
+            string branchType = chain.Substring(branch+1,end-branch-1);
+            string newChainName = "";
+            //Sets the whole modified chain name to newChainName.
+            for(int x = 0; x < countComas(chain.Substring(start,length))*2+2; x+=2){
+                if(newChainName == ""){
+                    newChainName = chain.Substring(start,length).Substring(x,1)+"-"+branchType;
                 }else{
-                    h = h+"-"+c.Substring(i,f-i).Substring(x,1)+"-"+a;
+                    newChainName = newChainName+"-"+chain.Substring(start,length).Substring(x,1)+"-"+branchType;
                 }
             }
-            return c.Replace(c.Substring(i,f-i), h);
+            return chain.Replace(chain.Substring(start,length), newChainName);
         }
         private static int countComas(string s){
             int i = 0;
@@ -29,88 +34,93 @@ namespace Carbons{
             }
             return i;
         }
-        public static (int[], int) Added(string s){
-            string[] p, t;
-            string j;
-            s = Con(s);
-            p = s.ToLower().Split("-");
-            t = new string[p.Length-1];
-            j = p[p.Length-1];
-            for(int i = 0; i < t.Length;i++){
-                t[i] = p[i];
+        public static int[] BranchesToMachine(string chain){
+            string[] newBranchesName;
+
+            while(chain.Contains(",")){
+                chain = ToExtended(chain);
             }
-            p = t;
-            for(int i = 0; i < p.Length; i++){
-                switch(p[i]){
+            newBranchesName = chain.ToLower().Split("-");
+            string[] temporary = new string[newBranchesName.Length-1];
+            for(int i = 0; i < temporary.Length;i++){
+                temporary[i] = newBranchesName[i];
+            }
+            newBranchesName = temporary;
+            for(int i = 0; i < newBranchesName.Length; i++){
+                switch(newBranchesName[i]){
                     case "metil":
-                        p[i] = "2";
+                        newBranchesName[i] = "2";
                         break;
                     case "etil":
-                        p[i] = "3";
+                        newBranchesName[i] = "3";
                         break;
                     case "propil":
-                        p[i] = "4";
+                        newBranchesName[i] = "4";
                         break;
                     case "butil":
-                        p[i] = "5";
+                        newBranchesName[i] = "5";
                         break;
                     case "pentil":
-                        p[i] = "6";
+                        newBranchesName[i] = "6";
                         break;
                     case "hexil":
-                        p[i] = "7";
+                        newBranchesName[i] = "7";
                         break;
                     case "heptil":
-                        p[i] = "8";
+                        newBranchesName[i] = "8";
                         break;
                     case "octil":
-                        p[i] = "9";
+                        newBranchesName[i] = "9";
                         break;
                     case "nontil":
-                        p[i] = "10";
+                        newBranchesName[i] = "10";
                         break;
                     case "decil":
-                        p[i] = "11";
+                        newBranchesName[i] = "11";
                         break;
                 }
             }
-            int[] r = new int[p.Length];
-            for(int i = 0; i < p.Length; i++){
-                r[i] = System.Convert.ToInt32(p[i])-1;
+            int[] result = new int[newBranchesName.Length];
+            for(int i = 0; i < newBranchesName.Length; i++){
+                result[i] = System.Convert.ToInt32(newBranchesName[i])-1;
             }
-            switch(j){
+            return (result);
+        }
+        public static int ChainToMachine(string chain){
+            string chainName = chain.ToLower().Split("-")[chain.Split("-").Length-1];
+            switch(chainName){
                     case "metano":
-                        j = "1";
+                        chainName = "1";
                         break;
                     case "etano":
-                        j = "2";
+                        chainName = "2";
                         break;
                     case "propano":
-                        j = "3";
+                        chainName = "3";
                         break;
                     case "butano":
-                        j = "4";
+                        chainName = "4";
                         break;
                     case "pentano":
-                        j = "5";
+                        chainName = "5";
                         break;
                     case "hexano":
-                        j = "6";
+                        chainName = "6";
                         break;
                     case "heptano":
-                        j = "7";
+                        chainName = "7";
                         break;
                     case "octano":
-                        j = "8";
+                        chainName = "8";
                         break;
                     case "nontano":
-                        j = "9";
+                        chainName = "9";
                         break;
                     case "decano":
-                        j = "10";
+                        chainName = "10";
                         break;
                 }
-            return (r,Convert.ToInt32(j));
+            return (Convert.ToInt32(chainName));
         }
     }
 }
