@@ -92,8 +92,10 @@ namespace Carbons{
                 }
                 if(c[branches[p*2]].Links(0) == -1){
                     l = 0;
-                }else{
+                }else if(c[branches[p*2]].Links(3) == -1){
                     l = 3;
+                }else{
+                    continue;
                 }
                 c[chainLen+n].SetLinks(3-l, branches[(p*2)]);
                 c[branches[p*2]].SetLinks(l, chainLen+n);

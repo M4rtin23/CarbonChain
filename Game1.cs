@@ -10,7 +10,7 @@ namespace Carbons{
         SpriteBatch spriteBatch;
 
         //Objects.
-        static string g = "3,4-Di Metil-2,3-Di Etil-1-Heptino";
+        static string g = "3,4-Di Metil-2,3-Di Etil-2-Heptino";
 //        private Chain chain = new Chain(5, new int[]{3,2,2,2,3,2});
         private Chain chain = new Chain(ChainToMachine(g), BranchesToMachine(g), TypeOfChain(g));
 
