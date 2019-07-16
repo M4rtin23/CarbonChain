@@ -41,7 +41,12 @@ namespace Carbons{
                 chain = ToExtended(chain);
             }
             newBranchesName = chain.ToLower().Split("-");
-            string[] temporary = new string[newBranchesName.Length-1];
+            string[] temporary;
+            //if(chain.Length % 2 == 1){
+                temporary = new string[newBranchesName.Length-1];
+            /*}else{
+                temporary = new string[newBranchesName.Length-2];
+            }*/
             for(int i = 0; i < temporary.Length;i++){
                 temporary[i] = newBranchesName[i];
             }
@@ -88,39 +93,77 @@ namespace Carbons{
         }
         public static int ChainToMachine(string chain){
             string chainName = chain.ToLower().Split("-")[chain.Split("-").Length-1];
-            switch(chainName){
-                    case "metano":
-                        chainName = "1";
-                        break;
-                    case "etano":
-                        chainName = "2";
-                        break;
-                    case "propano":
-                        chainName = "3";
-                        break;
-                    case "butano":
-                        chainName = "4";
-                        break;
-                    case "pentano":
-                        chainName = "5";
-                        break;
-                    case "hexano":
-                        chainName = "6";
-                        break;
-                    case "heptano":
-                        chainName = "7";
-                        break;
-                    case "octano":
-                        chainName = "8";
-                        break;
-                    case "nontano":
-                        chainName = "9";
-                        break;
-                    case "decano":
-                        chainName = "10";
-                        break;
+                if(chainName.Contains("met")){
+                    chainName = "1";
+                }else if(chainName.Contains("et")){
+                    chainName = "2";
+                }else if(chainName.Contains("prop")){
+                    chainName = "3";
+                }else if(chainName.Contains("but")){
+                    chainName = "4";
+                }else if(chainName.Contains("pent")){
+                    chainName = "5";
+                }else if(chainName.Contains("hex")){
+                    chainName = "6";
+                }else if(chainName.Contains("hept")){
+                    chainName = "7";
+                }else if(chainName.Contains("oct")){
+                    chainName = "8";
+                }else if(chainName.Contains("non")){
+                    chainName = "9";
+                }else if(chainName.Contains("dec")){
+                    chainName = "10";
                 }
             return (Convert.ToInt32(chainName));
+        }
+        public static int TypeOfChain(string chain){
+            int number = ChainToMachine(chain);
+            string chainName = chain.ToLower().Split("-")[chain.Split("-").Length-1];
+            string prefix = "";
+            switch(number){
+                case 1:
+                    prefix = "met";
+                    break;
+                case 2:
+                    prefix = "et";
+                    break;
+                case 3:
+                    prefix = "prop";
+                    break;
+                case 4:
+                    prefix = "but";
+                    break;
+                case 5:
+                    prefix = "pent";
+                    break;
+                case 6:
+                    prefix = "hex";
+                    break;
+                case 7:
+                    prefix = "hept";
+                    break;
+                case 8:
+                    prefix = "oct";
+                    break;
+                case 9:
+                    prefix = "non";
+                    break;
+                case 10:
+                    prefix = "dec";
+                    break;
+            }
+            switch(chainName.Replace(prefix, "")){
+                default:
+                case "ano":
+                    return 0;
+                case "eno":
+                    return 1;
+                case "ino":
+                    return 2;
+            }
+        }
+        public static int SpecialNumber(string chain){
+            return Convert.ToUInt16(chain.Split("-")[chain.Split("-").Length-2]);
         }
     }
 }

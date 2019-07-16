@@ -7,13 +7,14 @@ using static Carbons.Game1;
 namespace Carbons{
     public class Chain{
         Carbon[] c;
-        private int carbNum, chainLen;
-        int[] added;
-        public Chain(int chainLen, int[] added){
+        private int carbNum, chainLen, type;
+        int[] branches;
+        public Chain(int chainLen, int[] branches, int type){
             this.chainLen = chainLen;
-            this.added = added;
-            for(int i = 1; i<added.Length; i+=2){
-                this.carbNum += added[i];
+            this.branches = branches;
+            this.type = type;
+            for(int i = 1; i<branches.Length; i+=2){
+                this.carbNum += branches[i];
             }
             this.carbNum += chainLen;
             c = new Carbon[carbNum];
@@ -24,6 +25,23 @@ namespace Carbons{
                 c[i].SetLinks(2, i+1);
                 c[i+1].SetLinks(1, i);
             }
+            if(branches.Length % 2 != 0){
+                if(type == 1){
+                    if(c[branches[branches.Length-1]].Links(0) == -1 || c[branches[branches.Length-1]+1].Links(0) == -1){
+                        c[branches[branches.Length-1]].SetLinks(0,-2);
+                        c[branches[branches.Length-1]+1].SetLinks(0,-3);
+                    }else if(c[branches[branches.Length-1]].Links(3) == -1 || c[branches[branches.Length-1]+1].Links(3) == -1){
+                        c[branches[branches.Length-1]].SetLinks(3,-2);
+                        c[branches[branches.Length-1]+1].SetLinks(3,-3);
+                    }
+                }else if(type == 2){
+                    c[branches[branches.Length-1]].SetLinks(0,-2);
+                    c[branches[branches.Length-1]+1].SetLinks(0,-3);
+                    c[branches[branches.Length-1]].SetLinks(3,-2);
+                    c[branches[branches.Length-1]+1].SetLinks(3,-3);
+
+                }
+            }
             Add();
             for(int i = 0; i < c.Length; i++){
                 c[i].SetHidrogens();
@@ -33,7 +51,7 @@ namespace Carbons{
             int x = 0, y = 0;
             for(int i = 0; i < chainLen; i++){
                 DrawCarbon(sprBt, i, new Vector2(x, y));
-                if(c[i].Links(0) != -1){
+                if(c[i].Links(0) >= 0){
                     int m = c[i].Links(0), p = 0;
                     y--;
                     DrawCarbon(sprBt, m, new Vector2(x, y));
@@ -47,15 +65,13 @@ namespace Carbons{
                     y++;
                 }
 
-                if(c[i].Links(3) != -1){
+                if(c[i].Links(3) >= 0){
                     int m = c[i].Links(3), p = 0;
                     y++;
-                    //sprBt.DrawString(Font1, "C", new Vector2(x*32, y*32+250), Color.White);
                     DrawCarbon(sprBt, m, new Vector2(x, y));
                     while(c[m].Links(3) != -1){
                         p++;
                         y++;
-                        //sprBt.DrawString(Font1, "C", new Vector2(x*32, y*32+250), Color.White);
                         DrawCarbon(sprBt, m+1, new Vector2(x, y));
                         m = c[m].Links(3);
 
@@ -69,27 +85,32 @@ namespace Carbons{
         
         private void Add(){
             int l;
-            for(int p = 0; p < added.Length/2; p++){
+            for(int p = 0; p < branches.Length/2; p++){
                 int n = 0;
                 for(int i = 1; i < p*2+1; i+=2){
-                    n += added[i];
+                    n += branches[i];
                 }
-                if(c[added[p*2]].Links(0) == -1){
+                if(c[branches[p*2]].Links(0) == -1){
                     l = 0;
                 }else{
                     l = 3;
                 }
-                c[chainLen+n].SetLinks(3-l, added[(p*2)]);
-                c[added[p*2]].SetLinks(l, chainLen+n);
-                for(int i = chainLen+n; i < chainLen+n+added[p*2+1]-1; i++){
+                c[chainLen+n].SetLinks(3-l, branches[(p*2)]);
+                c[branches[p*2]].SetLinks(l, chainLen+n);
+                for(int i = chainLen+n; i < chainLen+n+branches[p*2+1]-1; i++){
                     c[i].SetLinks(l , i+1);
                     c[i+1].SetLinks(3-l , i);
                 }
             }
         }
-        float i;
         private void DrawCarbon(SpriteBatch sprBt, int c, Vector2 v){
-            i+=1/240f;
+            for(int m = 0; m < carbNum; m++){
+                sprBt.DrawString(Font1, ""+m+":", new Vector2(400, 32*m), Color.White);
+                for(int n = 0; n < 4; n++){
+                    sprBt.DrawString(Font1, ""+this.c[m].Links(n), new Vector2(64*n+500, 32*m), Color.White);
+                }
+            }
+
             string CH, N = "";
             switch(this.c[c].GetHidrogens()){
                 case 0:
@@ -117,12 +138,18 @@ namespace Carbons{
             v = v*52 + new Vector2(0, 300);
             sprBt.DrawString(Font1, CH, v, Color.White);
             sprBt.DrawString(Font2, N, v + new Vector2(24, 16), Color.White);
-            if(this.c[c].Links(0) != -1){
-                sprBt.DrawString(Font1, " --", v+ new Vector2(10,16), Color.White, 3*(float)Math.PI/2/*rotation */, new Vector2(-4, 16), 1, SpriteEffects.None,0);
+            if(this.c[c].Links(0) >= 0){
+                sprBt.DrawString(Font1, " --", v+ new Vector2(10,16), Color.White, 3*(float)Math.PI/2, new Vector2(-4, 16), 1, SpriteEffects.None,0);
             }
-            if(this.c[c].Links(1) != -1){
-                sprBt.DrawString(Font1, " --", v+ new Vector2(10,16), Color.White, 2*(float)Math.PI/2/*rotation */, new Vector2(-4, 16), 1, SpriteEffects.None,0);
-            }            
+            if(this.c[c].Links(0) == -2){
+                sprBt.DrawString(Font1, " --", v+ new Vector2(10,18), Color.White, 4*(float)Math.PI/2, new Vector2(-4, 16), 1, SpriteEffects.None,0);
+            }
+            if(this.c[c].Links(1) >= 0){
+                sprBt.DrawString(Font1, " --", v+ new Vector2(10,16), Color.White, 2*(float)Math.PI/2, new Vector2(-4, 16), 1, SpriteEffects.None,0);
+            }
+            if(this.c[c].Links(3) == -2){
+                sprBt.DrawString(Font1, " --", v+ new Vector2(10,8), Color.White, 4*(float)Math.PI/2, new Vector2(-4, 16), 1, SpriteEffects.None,0);
+            }
         }
     }
 }
