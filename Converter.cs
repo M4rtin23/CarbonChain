@@ -85,9 +85,18 @@ namespace Carbons{
                         break;
                 }
             }
-            int[] result = new int[newBranchesName.Length];
+            int[] result;
+            if(newBranchesName.Length % 2 == 0){
+                result = new int[newBranchesName.Length + 1];
+            }else{
+                result = new int[newBranchesName.Length];
+            }
             for(int i = 0; i < newBranchesName.Length; i++){
-                result[i] = System.Convert.ToInt32(newBranchesName[i])-1;
+                if(i < newBranchesName.Length){
+                    result[i] = System.Convert.ToInt32(newBranchesName[i])-1;
+                }else{
+                    result[i] = 0;
+                }
             }
             return (result);
         }
@@ -164,6 +173,21 @@ namespace Carbons{
         }
         public static int SpecialNumber(string chain){
             return Convert.ToUInt16(chain.Split("-")[chain.Split("-").Length-2]);
+        }
+        static string text = "";
+        static string lastKey = "as";
+        public static string Keyboards(){
+            Keys[] k = Keyboard.GetState().GetPressedKeys();
+            if(k.Length > 0 && (lastKey != k[0].ToString())){
+                lastKey = k[0].ToString();
+                switch(lastKey){
+                    case "Space":
+                        lastKey = " ";
+                        break;
+                }
+                text = text + lastKey;
+            }
+            return text;
         }
     }
 }

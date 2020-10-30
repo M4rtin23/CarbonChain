@@ -13,7 +13,7 @@ namespace Carbons{
             this.chainLen = chainLen;
             this.branches = branches;
             this.type = type;
-            for(int i = 1; i<branches.Length; i+=2){
+            for(int i = 1; i < branches.Length; i+=2){
                 this.carbNum += branches[i];
             }
             this.carbNum += chainLen;
@@ -138,6 +138,7 @@ namespace Carbons{
                     break;
             }
             v = v*52 + new Vector2(0, 300);
+            sprBt.DrawString(Font1, Converter.Keyboards(), new Vector2(0,0), Color.White);
             sprBt.DrawString(Font1, CH, v, Color.White);
             sprBt.DrawString(Font2, N, v + new Vector2(24, 16), Color.White);
             if(this.c[c].Links(0) >= 0){
